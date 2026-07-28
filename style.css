@@ -123,3 +123,7 @@ header p { color: var(--text-muted); font-size: 0.95rem; }
 .ai-input { display: flex; padding: 10px; background: rgba(0,0,0,0.6); border-top: 1px solid var(--border); }
 .ai-input input { flex: 1; padding: 8px 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 8px; color: white; outline: none; font-size: 0.9rem; }
 .ai-input button { background: var(--accent); border: none; color: white; width: 38px; border-radius: 8px; margin-left: 8px; cursor: pointer; }
+.modal-overlay {
+  z-index: 9999;
+  pointer-events: auto;
+}
