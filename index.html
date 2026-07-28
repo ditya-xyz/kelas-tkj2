@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Profesional TKJ - Teknik Komputer dan Jaringan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LAYAR LOGIN -->
+  <div id="loginScreen">
+    <div class="login-box glass-panel">
+      <div class="tkj-logo-container"><i class="fa-solid fa-network-wired neon-text"></i></div>
+      <h2>PORTAL TKJ</h2>
+      <p>Sistem Koordinasi & Manajemen Kelas Profesional</p>
+      <input type="text" id="nisInput" placeholder="Masukkan NIS (Siswa) atau admin123" onkeypress="handleEnter(event)">
+      <button class="btn btn-primary" onclick="prosesLogin()">Masuk Sistem <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- LOADING ANIMATION -->
+  <div id="loadingScreen">
+    <div class="spinner"></div>
+    <h3 class="neon-text">Inisialisasi Jaringan TKJ...</h3>
+  </div>
+
+  <!-- DASHBOARD UTAMA -->
+  <div id="dashboardApp" style="display: none;">
+    
+    <!-- BROADCAST MENGAMBANG -->
+    <div class="broadcast-banner glass-panel" id="broadcastWrapper">
+      <i class="fa-solid fa-bullhorn broadcast-icon"></i>
+      <div class="broadcast-text-wrapper">
+        <span id="broadcastTextDisplay">Memuat pengumuman penting...</span>
+      </div>
+      <button class="btn-edit-broadcast admin-only" onclick="openModal('modalBroadcast')" title="Edit Broadcast"><i class="fa-solid fa-pen"></i></button>
+    </div>
+
+    <header class="glass-panel">
+      <button class="btn-logout" onclick="prosesLogout()" title="Keluar"><i class="fa-solid fa-power-off"></i></button>
+      
+      <div class="header-brand">
+        <i class="fa-solid fa-network-wired logo-icon"></i>
+        <div>
+          <h1 class="neon-text">TEKNIK KOMPUTER DAN JARINGAN</h1>
+          <p>Pusat Komando Akademik, Jaringan, & Budaya Positif Kelas</p>
+        </div>
+      </div>
+      
+      <div class="role-badge" id="roleDisplay">Siswa</div>
+
+      <!-- PEMUTAR LAGU & KONVERTER URL MP3 -->
+      <div class="music-player">
+        <div class="track-info" id="trackName">Pilih / Putar Musik</div>
+        <audio id="audioPlayer"></audio>
+        <div class="player-controls">
+          <button onclick="prevTrack()" title="Sebelumnya"><i class="fa-solid fa-backward-step"></i></button>
+          <button onclick="togglePlay()" id="playBtn" title="Play/Pause"><i class="fa-solid fa-play"></i></button>
+          <button onclick="nextTrack()" title="Berikutnya"><i class="fa-solid fa-forward-step"></i></button>
+          <button onclick="openModal('modalKonverter')" title="Konversi MP3 ke URL" class="btn-mini-action"><i class="fa-solid fa-wand-magic-sparkles"></i> Konverter MP3</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      
+      <!-- KEYAKINAN KELAS & VISI MISI -->
+      <div class="grid-two-columns">
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-compass"></i> Visi & Misi Kelas</h2>
+            <button class="btn btn-primary admin-only" onclick="openModal('modalVisi')"><i class="fa-solid fa-pen"></i> Edit</button>
+          </div>
+          <div class="glass-panel content-box" id="visiContent"></div>
+        </section>
+
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-handshake-angle"></i> Keyakinan Kelas</h2>
+            <button class="btn btn-primary admin-only" onclick="openModal('modalKeyakinan')"><i class="fa-solid fa-pen"></i> Edit</button>
+          </div>
+          <div class="glass-panel content-box" id="keyakinanContent"></div>
+        </section>
+      </div>
+
+      <!-- MISI & TUGAS SECTION -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-solid fa-rocket"></i> Misi & Tugas Pembelajaran</h2>
+          <button class="btn btn-primary admin-only" onclick="openModal('modalTugas')"><i class="fa-solid fa-plus"></i> Tambah Misi</button>
+        </div>
+        <div class="grid-container" id="tugasContainer"></div>
+      </section>
+
+      <!-- JADWAL PELAJARAN & PIKET -->
+      <div class="grid-two-columns">
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-calendar-days"></i> Jadwal Pelajaran</h2>
+            <button class="btn btn-primary admin-only" onclick="openModal('modalJadwal')"><i class="fa-solid fa-pen"></i> Edit</button>
+          </div>
+          <div class="glass-panel content-box" id="jadwalContent"></div>
+        </section>
+
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-broom"></i> Jadwal Piket Kebersihan</h2>
+            <button class="btn btn-primary admin-only" onclick="openModal('modalPiket')"><i class="fa-solid fa-pen"></i> Edit</button>
+          </div>
+          <div class="glass-panel content-box" id="piketContent"></div>
+        </section>
+      </div>
+
+      <!-- PENGHARGAAN KELAS (HALL OF FAME) -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-solid fa-trophy"></i> Penghargaan & Hall of Fame</h2>
+          <button class="btn btn-primary admin-only" onclick="openModal('modalPenghargaan')"><i class="fa-solid fa-plus"></i> Tambah Penghargaan</button>
+        </div>
+        <div class="grid-container" id="penghargaanContainer"></div>
+      </section>
+
+      <!-- DATABASE ANGGOTA & FOTO MANDIRI SISWA -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-solid fa-users-rectangle"></i> Direktori Anggota TKJ</h2>
+          <div>
+            <button class="btn btn-primary" onclick="openModal('modalDaftarSiswa')" style="margin-right: 8px;"><i class="fa-solid fa-user-plus"></i> Daftar / Ganti Foto Saya</button>
+            <button class="btn btn-primary admin-only" onclick="openModal('modalSiswa')"><i class="fa-solid fa-plus"></i> Tambah Anggota (Admin)</button>
+          </div>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">* Klik tombol **"Daftar / Ganti Foto Saya"** untuk mendaftarkan nama/NIS Anda atau mengganti foto profil secara mandiri menggunakan NIS Anda.</p>
+        <div class="grid-container" id="siswaContainer"></div>
+      </section>
+
+      <!-- GALERI FOTO SEKELAS -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title"><i class="fa-solid fa-images"></i> Galeri Dokumentasi Sekelas</h2>
+          <button class="btn btn-primary" onclick="openModal('modalGaleri')"><i class="fa-solid fa-upload"></i> Upload Foto Momen</button>
+        </div>
+        <div class="grid-container" id="galeriContainer"></div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- MODAL KONVERTER MP3 KE URL -->
+  <div class="modal-overlay" id="modalKonverter">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Konverter MP3 ke URL</span><button class="close-modal" onclick="closeModal('modalKonverter')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Judul Lagu</label><input type="text" id="konvJudul" placeholder="Nama lagu..."></div>
+      <div class="form-group"><label>Pilih File Audio (.mp3)</label><input type="file" id="konvFile" accept="audio/mp3,audio/*"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="prosesKonversiMp3()">Generate & Tambah ke Playlist</button>
+    </div>
+  </div>
+
+  <!-- MODAL PENDAFTARAN / GANTI FOTO MANDIRI SISWA -->
+  <div class="modal-overlay" id="modalDaftarSiswa">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Daftar / Ganti Foto Profil Mandiri</span><button class="close-modal" onclick="closeModal('modalDaftarSiswa')"><i class="fa-solid fa-xmark"></i></button></div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">Masukkan NIS Anda yang terdaftar (atau NIS baru jika belum ada), lalu upload foto terbaikmu.</p>
+      <div class="form-group"><label>Nama Lengkap</label><input type="text" id="mandiriNama" placeholder="Nama lengkap Anda..."></div>
+      <div class="form-group"><label>Nomor Induk Siswa (NIS)</label><input type="text" id="mandiriNis" placeholder="Nomor NIS Anda..."></div>
+      <div class="form-group"><label>Upload Foto Profil Baru</label><input type="file" id="mandiriFotoFile" accept="image/*"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="prosesSimpanMandiriSiswa()">Simpan / Update Profil Saya</button>
+    </div>
+  </div>
+
+  <!-- MODAL VISI MISI -->
+  <div class="modal-overlay" id="modalVisi">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Edit Visi & Misi</span><button class="close-modal" onclick="closeModal('modalVisi')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Visi & Misi Kelas</label><textarea id="inputVisiText" rows="6"></textarea></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveVisi()">Simpan Perubahan</button>
+    </div>
+  </div>
+
+  <!-- MODAL KEYAKINAN KELAS -->
+  <div class="modal-overlay" id="modalKeyakinan">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Edit Keyakinan Kelas</span><button class="close-modal" onclick="closeModal('modalKeyakinan')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Poin Keyakinan Kelas</label><textarea id="inputKeyakinanText" rows="6"></textarea></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveKeyakinan()">Simpan Perubahan</button>
+    </div>
+  </div>
+
+  <!-- MODAL TUGAS -->
+  <div class="modal-overlay" id="modalTugas">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Tambah Misi Pembelajaran</span><button class="close-modal" onclick="closeModal('modalTugas')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Judul Misi</label><input type="text" id="tugasJudul"></div>
+      <div class="form-group"><label>Deadline</label><input type="text" id="tugasDeadline" placeholder="Contoh: Besok, 23:59"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveTugas()">Simpan Misi</button>
+    </div>
+  </div>
+
+  <!-- MODAL JADWAL -->
+  <div class="modal-overlay" id="modalJadwal">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Edit Jadwal Pelajaran</span><button class="close-modal" onclick="closeModal('modalJadwal')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Detail Pelajaran</label><textarea id="inputJadwalText" rows="6"></textarea></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveJadwal()">Simpan Jadwal</button>
+    </div>
+  </div>
+
+  <!-- MODAL PIKET -->
+  <div class="modal-overlay" id="modalPiket">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Edit Jadwal Piket</span><button class="close-modal" onclick="closeModal('modalPiket')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Detail Piket</label><textarea id="inputPiketText" rows="6"></textarea></div>
+      <button class="btn btn-primary" style="width:100%" onclick="savePiket()">Simpan Piket</button>
+    </div>
+  </div>
+
+  <!-- MODAL PENGHARGAAN -->
+  <div class="modal-overlay" id="modalPenghargaan">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Tambah Penghargaan Kelas</span><button class="close-modal" onclick="closeModal('modalPenghargaan')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Nama Siswa / Tim</label><input type="text" id="penghargaanNama"></div>
+      <div class="form-group"><label>Kategori Prestasi</label><input type="text" id="penghargaanKet" placeholder="Contoh: Admin Jaringan Terbaik Bulan Ini"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="savePenghargaan()">Simpan Penghargaan</button>
+    </div>
+  </div>
+
+  <!-- MODAL BROADCAST -->
+  <div class="modal-overlay" id="modalBroadcast">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Edit Broadcast Pengumuman</span><button class="close-modal" onclick="closeModal('modalBroadcast')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Pesan Broadcast</label><textarea id="inputBroadcastText" rows="3"></textarea></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveBroadcast()">Perbarui Broadcast</button>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN TAMBAH SISWA -->
+  <div class="modal-overlay" id="modalSiswa">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Tambah Anggota (Admin)</span><button class="close-modal" onclick="closeModal('modalSiswa')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Nama Lengkap</label><input type="text" id="siswaNama"></div>
+      <div class="form-group"><label>Nomor Induk Siswa (NIS)</label><input type="text" id="siswaNis"></div>
+      <div class="form-group"><label>Upload Foto Profil</label><input type="file" id="siswaFotoFile" accept="image/*"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveSiswaDataAdmin()">Simpan Data</button>
+    </div>
+  </div>
+
+  <!-- MODAL GALERI KELAS -->
+  <div class="modal-overlay" id="modalGaleri">
+    <div class="modal glass-panel">
+      <div class="modal-header"><span>Upload Foto Galeri Kelas</span><button class="close-modal" onclick="closeModal('modalGaleri')"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="form-group"><label>Keterangan Foto</label><input type="text" id="galeriKet" placeholder="Contoh: Praktikum Cisco Lab Jaringan"></div>
+      <div class="form-group"><label>File Foto Dokumentasi</label><input type="file" id="galeriFile" accept="image/*"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveGaleriPhoto()">Upload ke Galeri</button>
+    </div>
+  </div>
+
+  <!-- FLOATING AI ASSISTANT -->
+  <div id="aiChatBtn" onclick="toggleAIChat()"><i class="fa-solid fa-brain"></i></div>
+  <div id="aiChatWindow" class="glass-panel">
+    <div class="ai-header">
+      <span><i class="fa-solid fa-microchip"></i> Asisten AI TKJ</span>
+      <button onclick="toggleAIChat()" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="msg ai-msg">Halo teknisi muda TKJ! Ada yang ingin didiskusikan seputar materi atau konfigurasi router?</div>
+    </div>
+    <div class="ai-input">
+      <input type="text" id="aiInput" placeholder="Tanya AI..." onkeypress="if(event.key==='Enter') sendAIMessage()">
+      <button onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
