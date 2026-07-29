@@ -103,7 +103,7 @@ header p { color: var(--text-muted); font-size: 0.95rem; }
 .task-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 6px; color: #fb923c; }
 .task-deadline { font-size: 0.85rem; color: var(--text-muted); background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 6px; display: inline-block; }
 
-.modal-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); display:none; justify-content:center; align-items:center; z-index:1000; padding: 15px; }
+.modal-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75); display:none; justify-content:center; align-items:center; z-index:99999; pointer-events:auto; padding: 15px; }
 .modal { width: 100%; max-width: 450px; padding: 25px; max-height: 90vh; overflow-y: auto; }
 .modal-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; margin-bottom: 20px; color: var(--primary); align-items: center; }
 .close-modal { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
