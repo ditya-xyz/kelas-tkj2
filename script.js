@@ -159,7 +159,7 @@ function prosesKonversiMp3() {
 // 4. DATABASE & RENDER DATA
 // ==========================================
 let dbTKJ = JSON.parse(localStorage.getItem('tkjDatabaseV5')) || {
-  broadcast: "Selamat datang di Portal Profesional TKJ! Jaga kekompakan dan tetap semangat belajar.",
+  broadcast: "Selamat datang di Website Kelas XI-TKJ2! Jaga kekompakan dan tetap semangat belajar.",
   visi: "Menjadi kelas unggulan yang kompeten di bidang Teknik Komputer dan Jaringan serta berakhlak mulia.",
   keyakinan: "1. Saling menghargai sesama warga kelas.\n2. Disiplin dalam praktikum & pengumpulan tugas.\n3. Menjaga kebersihan lab dan ruang kelas.",
   tugas: [{ judul: "Konfigurasi Mikrotik VLAN", deadline: "Besok" }],
