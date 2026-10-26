@@ -399,3 +399,15 @@ function sendAIMessage() {
 
 // Inisialisasi awal
 cekStatusLogin();
+
+// ... (kode fungsi lain yang sudah ada di file script.js Anda) ...
+
+// TARUH KODE DATABASE LOCALSTORAGE DI SINI (PALING BAWAH)
+let dataSiswaSekelas = [
+    { nis: "1001", nama: "Budi Santoso", foto: "" },
+    { nis: "1002", nama: "Siska Amelia", foto: "" },
+];
+
+if (!localStorage.getItem("data_tkj")) {
+    localStorage.setItem("data_tkj", JSON.stringify(dataSiswaSekelas));
+}
